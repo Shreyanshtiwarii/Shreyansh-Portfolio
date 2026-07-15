@@ -1,0 +1,405 @@
+/* ═══════════════════════════════════════════════════════════
+   3D Mini-Game Overlay Styles
+   ═══════════════════════════════════════════════════════════ */
+
+.gameOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000; /* Ensure it stays on top of everything, including Navbar & Assistant */
+  overflow: hidden;
+  background: #030308;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #f5f5fa;
+}
+
+.canvasContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* ── Back Button (top left) ──────────────────────────────────── */
+.backBtn {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px 0 14px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  z-index: 10;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.backBtn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.backBtn:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(167, 139, 250, 0.4);
+  color: #c4b5fd;
+  transform: translateX(-2px);
+}
+
+/* ── Close Button ────────────────────────────────────────────── */
+.closeBtn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.closeBtn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.closeBtn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  transform: rotate(90deg) scale(1.05);
+}
+
+/* ── HUD Display ─────────────────────────────────────────────── */
+.hud {
+  position: absolute;
+  top: 32px;
+  display: flex;
+  gap: 20px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.hudPanel {
+  background: rgba(8, 8, 16, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 10px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.hudExitBtn {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  transition: all 0.25s ease;
+}
+
+.hudExitBtn:hover {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.18);
+  transform: translateY(-2px);
+}
+
+.hudExitBtn:active {
+  transform: translateY(0);
+}
+
+.hudLabel {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 1.8px;
+  color: #b8b8c8;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.hudValue {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.hudTotal {
+  font-size: 0.9rem;
+  color: #8a8a9a;
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+.hudTimerWarning {
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
+  animation: pulseWarning 0.8s infinite alternate;
+}
+
+@keyframes pulseWarning {
+  0% {
+    background: rgba(8, 8, 16, 0.72);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  }
+  100% {
+    background: rgba(30, 8, 8, 0.8);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.35);
+  }
+}
+
+/* ── Glass Menu Layout ───────────────────────────────────────── */
+.menuContainer {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.glassMenu {
+  background: rgba(10, 10, 18, 0.8);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 28px;
+  padding: 38px 44px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 40px rgba(139, 92, 246, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menuTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.menuSubtitle {
+  font-size: 0.92rem;
+  color: #b8b8c8;
+  margin-bottom: 26px;
+  line-height: 1.6;
+}
+
+/* Keyboard keys visuals */
+.instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 28px;
+}
+
+.instructionItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
+
+.key {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-bottom-width: 3px;
+  border-radius: 7px;
+  padding: 4px 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  min-width: 28px;
+  text-align: center;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.4);
+}
+
+.keyWide {
+  min-width: 96px;
+}
+
+.instructionText {
+  font-size: 0.85rem;
+  color: #8a8a9a;
+  margin-left: 8px;
+}
+
+/* Button visuals */
+.primaryBtn {
+  background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.98rem;
+  border-radius: 14px;
+  padding: 14px 36px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.32);
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(139, 92, 246, 0.45);
+  filter: brightness(1.1);
+}
+
+.primaryBtn:active {
+  transform: translateY(0);
+}
+
+.secondaryBtn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #b8b8c8;
+  font-weight: 500;
+  font-size: 0.9rem;
+  border-radius: 14px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+}
+
+.secondaryBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.redText {
+  color: #ef4444 !important;
+  text-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+.goldText {
+  color: #fbbf24 !important;
+  text-shadow: 0 0 15px rgba(250, 191, 36, 0.35);
+}
+
+/* ── Tablet responsiveness ───────────────────────────────────── */
+@media (max-width: 768px) {
+  .hud {
+    gap: 14px;
+  }
+  .hudPanel {
+    padding: 9px 20px;
+    min-width: 100px;
+  }
+  .menuContainer {
+    max-width: 420px;
+    padding: 16px;
+  }
+  .glassMenu {
+    padding: 32px 30px;
+  }
+}
+
+/* ── Mobile responsiveness ───────────────────────────────────── */
+@media (max-width: 480px) {
+  .hud {
+    top: 24px;
+    gap: 12px;
+  }
+
+  .hudPanel {
+    padding: 8px 18px;
+    min-width: 90px;
+    border-radius: 14px;
+  }
+
+  .hudLabel {
+    font-size: 0.6rem;
+    letter-spacing: 1.2px;
+  }
+
+  .hudValue {
+    font-size: 1.15rem;
+  }
+
+  .closeBtn {
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .closeBtn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .backBtn {
+    top: 16px;
+    left: 16px;
+    height: 38px;
+    width: 38px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .backBtn span {
+    display: none;
+  }
+
+  .backBtn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .glassMenu {
+    padding: 28px 24px;
+    border-radius: 20px;
+  }
+
+  .menuTitle {
+    font-size: 1.6rem;
+  }
+
+  .menuSubtitle {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+}

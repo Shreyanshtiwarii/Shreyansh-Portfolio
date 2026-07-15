@@ -1,0 +1,86 @@
+{
+  "profile": {
+    "name": "Shreyansh Tiwari",
+    "role": "Computer Science Engineering Student",
+    "location": "India",
+    "status": "🟢 Available for internships",
+    "tagline": "Building interactive apps with beautiful UI and smooth animations.",
+    "focusAreas": ["Cloud Computing", "Cybersecurity", "Full Stack Development"]
+  },
+
+  "topics": [
+    {
+      "id": "identity",
+      "intents": ["who are you", "who is this", "what is this", "who am i talking to", "assistant"],
+      "chips": ["About Me"],
+      "response": "I'm Shreyansh's portfolio assistant 🤖 — I can tell you all about him: his skills, projects, experience, education and how to get in touch. What would you like to know?"
+    },
+    {
+      "id": "about",
+      "intents": ["about you", "tell me about yourself", "about shreyansh", "introduce yourself", "bio", "background"],
+      "chips": ["About Me", "Skills", "Projects"],
+      "response": "Hi, I'm Shreyansh Tiwari — a Computer Science Engineering student passionate about Cloud Computing, Cybersecurity, and Full Stack Development. I love building interactive applications with beautiful UI and smooth animations, and I'm currently available for internship opportunities."
+    },
+    {
+      "id": "skills",
+      "intents": ["skills", "what can you do", "technical skills", "tech stack", "abilities"],
+      "chips": ["Projects", "Experience", "Technologies"],
+      "response": "Here's my skill set:\n\n• Frontend: HTML, CSS, JavaScript, React\n• Backend: Java, Spring Boot\n• Cloud: Google Cloud Platform\n• Cybersecurity: Linux, Networking\n• Programming: C++, Python"
+    },
+    {
+      "id": "technologies",
+      "intents": ["technologies", "languages", "frameworks", "tools", "stack"],
+      "chips": ["Skills", "Projects", "Experience"],
+      "response": "I work with React, JavaScript, HTML/CSS on the frontend, Java and Spring Boot on the backend, Google Cloud Platform for cloud deployments, and C++ / Python for programming and problem-solving. I'm also comfortable with Linux and networking fundamentals."
+    },
+    {
+      "id": "projects",
+      "intents": ["projects", "show your projects", "work", "portfolio", "what have you built", "built"],
+      "chips": ["Skills", "Experience", "Contact"],
+      "response": "Here are some projects I've built:\n\n• Disk Scheduling Simulator — visualizes FCFS, SCAN, SSTF and C-SCAN algorithms (Java, Algorithms)\n• Deadlock Detection Simulator — models resource allocation graphs to detect OS deadlocks (Java, Graph Theory)\n• Employee Verification System — a full-stack app with role-based access control (Spring Boot, React, Cloud)\n\nScroll down to the \"Featured Work\" section to see them in detail!"
+    },
+    {
+      "id": "experience",
+      "intents": ["experience", "work experience", "internship", "roles", "activities"],
+      "chips": ["Projects", "Education", "Skills"],
+      "response": "My experience so far includes:\n\n• Google Cloud Arcade Facilitator — guided peers through Cloud Arcade quests and skill badge labs\n• GDG On Campus Volunteer — helped coordinate developer sessions and workshops\n• Cloud Jam Organizer — co-organized hands-on cloud lab events\n• Hackathon Participant — built and presented projects under time constraints"
+    },
+    {
+      "id": "education",
+      "intents": ["study", "education", "college", "university", "degree", "where do you study"],
+      "chips": ["Experience", "Skills", "About Me"],
+      "response": "I'm currently pursuing a B.Tech in Computer Science Engineering. My coursework covers Data Structures & Algorithms, Operating Systems, Computer Networks, and Cloud Computing."
+    },
+    {
+      "id": "contact",
+      "intents": ["contact", "reach you", "email", "get in touch", "hire you", "connect"],
+      "chips": ["Resume", "About Me", "Projects"],
+      "response": "You can reach out via Gmail (shreyanshtiwari.cs@gmail.com) or connect with me on LinkedIn / GitHub. You'll find my direct contact details and social links in the \"Let's Connect\" section of this site."
+    },
+    {
+      "id": "resume",
+      "intents": ["resume", "cv", "download resume"],
+      "chips": ["Contact", "Skills", "Experience"],
+      "response": "You can find my certifications in the Certificates section of this site, and reach out via the Contact section for a copy of my full resume."
+    },
+    {
+      "id": "greeting",
+      "intents": ["hi", "hello", "hey", "yo", "sup"],
+      "chips": ["About Me", "Skills", "Projects"],
+      "response": "Hey there! 👋 I'm Shreyansh's AI assistant. Ask me about his skills, projects, experience, education, or how to get in touch."
+    },
+    {
+      "id": "thanks",
+      "intents": ["thanks", "thank you", "cool", "nice", "awesome"],
+      "chips": ["Projects", "Contact"],
+      "response": "You're welcome! Let me know if you'd like to know anything else about Shreyansh 🙂"
+    }
+  ],
+
+  "fallback": {
+    "response": "I'm not sure about that one — I can only answer questions about Shreyansh's background, skills, projects, experience, and contact details. Try one of the suggestions below!",
+    "chips": ["About Me", "Projects", "Skills", "Resume", "Contact"]
+  },
+
+  "suggestionChips": ["About Me", "Projects", "Skills", "Resume", "Contact"]
+}

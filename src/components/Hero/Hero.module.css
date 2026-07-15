@@ -1,0 +1,305 @@
+/* ══════════════════════════════════════════
+   Hero Section
+   All existing layout + colours preserved.
+   New additions: animGradient, particleCanvas,
+   parallaxLayer, badge, scrollIndicator.
+   ══════════════════════════════════════════ */
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* ── Animated gradient background ── */
+.animGradient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 30%, rgba(139,92,246,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 70%, rgba(59,130,246,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(167,139,250,0.10) 0%, transparent 60%);
+  background-size: 200% 200%;
+  animation: gradientShift 14s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 0%; }
+  33%  { background-position: 60% 40%; }
+  66%  { background-position: 30% 80%; }
+  100% { background-position: 100% 100%; }
+}
+
+/* ── Hero-local particle canvas ── */
+.particleCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Parallax layer (receives GSAP x/y) ── */
+.parallaxLayer {
+  position: relative;
+  z-index: 10;
+  will-change: transform;
+}
+
+/* ══ Existing layout — unchanged ══ */
+.heroContent {
+  position: relative;
+  z-index: 10;
+  max-width: 620px;
+  padding: 0 60px;
+}
+
+/* ── Available for Internship badge ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 50px;
+  background: rgba(139,92,246,0.12);
+  border: 1px solid rgba(139,92,246,0.35);
+  backdrop-filter: blur(10px);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-purple-light);
+  letter-spacing: 0.4px;
+  margin-bottom: 18px;
+  animation: badgePulse 3s ease-in-out infinite;
+}
+
+.badgeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.8);
+  animation: dotPing 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(139,92,246,0.0); }
+  50%       { box-shadow: 0 0 16px 2px rgba(139,92,246,0.25); }
+}
+
+@keyframes dotPing {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.35); opacity: 0.7; }
+}
+
+/* ══ Existing text styles — unchanged ══ */
+.wave {
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+  color: var(--color-grey-light);
+}
+
+.subLine {
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--color-grey-light);
+  margin-bottom: 4px;
+}
+
+.name {
+  font-size: 4.2rem;
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 18px;
+  letter-spacing: -1px;
+}
+
+.welcome {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--color-white);
+  margin-bottom: 10px;
+}
+
+.role {
+  font-size: 1.05rem;
+  color: var(--color-grey-light);
+  margin-bottom: 6px;
+}
+
+.tags {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-purple-light);
+  letter-spacing: 0.5px;
+  margin-bottom: 36px;
+}
+
+.ctaGroup {
+  display: flex;
+  gap: 20px;
+}
+
+.btnPrimary,
+.btnSecondary {
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.btnPrimary {
+  background: var(--gradient-primary);
+  color: var(--color-white);
+  box-shadow: var(--shadow-glow-purple);
+}
+
+.btnPrimary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 55px rgba(139, 92, 246, 0.5);
+}
+
+.btnSecondary {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--color-white);
+  backdrop-filter: var(--glass-blur);
+}
+
+.btnSecondary:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-blue-glow);
+}
+
+/* ── Scroll Down Indicator ── */
+.scrollIndicator {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-grey-light);
+  transition: color 0.3s ease;
+  animation: scrollBounce 2.4s ease-in-out infinite;
+}
+
+.scrollIndicator:hover {
+  color: var(--color-purple-light);
+}
+
+.scrollText {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+}
+
+.scrollChevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0);   opacity: 0.7; }
+  50%       { transform: translateX(-50%) translateY(8px); opacity: 1;   }
+}
+
+/* ══ Responsive — unchanged ══ */
+@media (max-width: 1024px) {
+  .heroContent {
+    max-width: 90%;
+    text-align: center;
+    margin: 0 auto;
+  }
+  .ctaGroup {
+    justify-content: center;
+  }
+  .badge {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroContent {
+    padding: 0 24px;
+  }
+  .name {
+    font-size: 2.6rem;
+  }
+  .welcome {
+    font-size: 1.1rem;
+  }
+  .ctaGroup {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .btnPrimary, .btnSecondary {
+    width: 100%;
+  }
+}
+
+/* Small phones — tighten scale further and give elements room to breathe
+   without the section feeling like a wall of stacked text. */
+@media (max-width: 420px) {
+  .badge {
+    font-size: 0.7rem;
+    padding: 5px 14px;
+    margin-bottom: 14px;
+  }
+  .wave {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
+  .subLine {
+    font-size: 1.3rem;
+    margin-bottom: 2px;
+  }
+  .name {
+    font-size: 2.1rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 14px;
+  }
+  .welcome {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  .role {
+    font-size: 0.92rem;
+  }
+  .tags {
+    font-size: 0.85rem;
+    margin-bottom: 28px;
+  }
+  .btnPrimary,
+  .btnSecondary {
+    padding: 13px 24px;
+    font-size: 0.88rem;
+  }
+}
+
+/* Touch devices have no real "unhover" -- a tap would otherwise leave the
+   button stuck mid-lift until something else is tapped. This only applies
+   where there's no real hover capability, so desktop is unaffected. */
+@media (hover: none) {
+  .btnPrimary:hover,
+  .btnSecondary:hover {
+    transform: none;
+  }
+}

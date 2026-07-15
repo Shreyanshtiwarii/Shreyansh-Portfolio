@@ -1,0 +1,74 @@
+:root {
+  /* Core palette */
+  --color-black: #000000;
+  --color-dark-1: #0a0a12;
+  --color-dark-2: #12121c;
+  --color-dark-3: #1a1a28;
+  --color-grey: #8a8a9a;
+  --color-grey-light: #b8b8c8;
+  --color-white: #f5f5fa;
+
+  /* Accent */
+  --color-purple: #8b5cf6;
+  --color-purple-light: #a78bfa;
+  --color-blue: #3b82f6;
+  --color-blue-glow: #4f9eff;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--color-purple) 0%, var(--color-blue) 100%);
+  --gradient-text: linear-gradient(90deg, #a78bfa 0%, #4f9eff 100%);
+  --gradient-bg: none;
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(16px);
+
+  /* Fonts */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Poppins', sans-serif;
+
+  /* Shadows */
+  --shadow-glow-purple: 0 0 40px rgba(139, 92, 246, 0.35);
+  --shadow-glow-blue: 0 0 40px rgba(59, 130, 246, 0.3);
+
+  /* Layout */
+  --navbar-height: 80px;
+  --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Theme configurations */
+  --navbar-bg: rgba(10, 10, 18, 0.55);
+  --input-bg: rgba(255, 255, 255, 0.04);
+  --terminal-bg: rgba(8, 8, 16, 0.75);
+}
+
+[data-theme="light"] {
+  /* Core palette */
+  --color-black: #f3f3fa;
+  --color-dark-1: #ffffff;
+  --color-dark-2: #eaeaf4;
+  --color-dark-3: #e2e2ed;
+  --color-grey: #6b6b7a;
+  --color-grey-light: #3e3e4f;
+  --color-white: #0f0f1c;
+
+  /* Accent overrides */
+  --color-purple: #7c3aed;
+  --color-purple-light: #6d28d9;
+  --color-blue: #2563eb;
+  --color-blue-glow: #1d4ed8;
+
+  /* Glass overrides for light background */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(10, 10, 18, 0.09);
+  --glass-blur: blur(20px);
+
+  /* Shadows (soft shadow instead of glow) */
+  --shadow-glow-purple: 0 10px 30px rgba(124, 58, 237, 0.12);
+  --shadow-glow-blue: 0 10px 30px rgba(37, 99, 235, 0.10);
+
+  /* Element overrides */
+  --navbar-bg: rgba(243, 243, 250, 0.72);
+  --input-bg: rgba(0, 0, 0, 0.035);
+  --terminal-bg: #0c0c14;
+}

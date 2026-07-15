@@ -1,0 +1,44 @@
+.dot,
+.ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  border-radius: 50%;
+  transition: opacity 0.25s ease;
+}
+
+.dot.visible,
+.ring.visible {
+  opacity: 1;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-purple-light);
+  box-shadow: 0 0 12px 3px rgba(167, 139, 250, 0.9), 0 0 24px 6px rgba(139, 92, 246, 0.5);
+}
+
+.ring {
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid rgba(167, 139, 250, 0.6);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+}
+
+.ringActive {
+  border-color: rgba(167, 139, 250, 0.9);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.22) 0%, transparent 70%);
+}
+
+/* Never render or affect layout on touch / coarse-pointer (mobile) devices */
+@media (hover: none), (pointer: coarse) {
+  .dot,
+  .ring {
+    display: none;
+  }
+}

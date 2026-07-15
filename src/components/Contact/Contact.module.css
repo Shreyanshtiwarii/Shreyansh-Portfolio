@@ -1,0 +1,237 @@
+.contact {
+  position: relative;
+  width: 100%;
+  padding: 140px 0 160px;
+  z-index: 10;
+}
+
+.heading {
+  font-size: 2.4rem;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.subheading {
+  text-align: center;
+  color: var(--color-grey-light);
+  font-size: 1rem;
+  max-width: 520px;
+  margin: 0 auto 48px;
+  line-height: 1.7;
+}
+
+.glassCard {
+  max-width: 640px;
+  margin: 0 auto;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.85rem;
+  color: var(--color-grey-light);
+  font-weight: 500;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 13px 16px;
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: var(--transition-smooth);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-grey);
+}
+
+.input[aria-invalid='true'],
+.textarea[aria-invalid='true'] {
+  border-color: rgba(248, 113, 113, 0.6);
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-purple-light);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.sendBtn {
+  margin-top: 6px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  background: var(--gradient-primary);
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  transition: var(--transition-smooth);
+}
+
+.sendBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow-purple);
+}
+
+.sendBtn:active {
+  transform: translateY(-1px);
+}
+
+.sendBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.fieldError {
+  font-size: 0.82rem;
+  color: #f87171;
+  line-height: 1.4;
+}
+
+.statusSuccess,
+.statusError {
+  margin-top: 4px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.statusSuccess {
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.statusError {
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.socialRow {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--glass-border);
+}
+
+.socialIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--color-grey-light);
+  transition: var(--transition-smooth);
+}
+
+.socialIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.socialIcon:hover {
+  color: var(--color-white);
+  border-color: rgba(167, 139, 250, 0.4);
+  background: rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 24px rgba(139, 92, 246, 0.35);
+  transform: translateY(-4px);
+}
+
+@media (max-width: 768px) {
+  .contact {
+    padding: 100px 0 120px;
+  }
+  .heading {
+    font-size: 1.9rem;
+  }
+  .glassCard {
+    padding: 32px 24px;
+  }
+  .socialRow {
+    gap: 14px;
+  }
+  .socialIcon {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 420px) {
+  .contact {
+    padding: 80px 0 96px;
+  }
+  .heading {
+    font-size: 1.6rem;
+  }
+  .subheading {
+    font-size: 0.92rem;
+    margin-bottom: 36px;
+  }
+  .glassCard {
+    padding: 24px 18px;
+    border-radius: 18px;
+  }
+  .form {
+    gap: 18px;
+  }
+  .input,
+  .textarea {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+  .sendBtn {
+    padding: 13px 24px;
+    font-size: 0.95rem;
+  }
+  .socialRow {
+    margin-top: 32px;
+    padding-top: 24px;
+  }
+}
+
+@media (hover: none) {
+  .sendBtn:hover,
+  .socialIcon:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

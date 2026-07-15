@@ -1,0 +1,25 @@
+.canvasWrapper {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  /* 100vh on mobile is measured against the *largest* possible viewport
+     (address bar hidden). On page load the address bar is usually still
+     showing, so the real viewport is shorter than 100vh -- the canvas
+     gets created taller than the visible area, then R3F's ResizeObserver
+     fires again the instant the browser chrome settles, and the
+     perspective camera's aspect ratio jumps with it. That sudden
+     aspect-ratio change is what reads as the character "suddenly
+     enlarging". 100svh locks to the *smallest* stable viewport (bar
+     visible) so it doesn't move once the page has painted; the plain
+     100vh line is kept first as a fallback for browsers without svh. */
+  height: 100vh;
+  height: 100svh;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.canvasWrapper canvas {
+  pointer-events: auto;
+}

@@ -1,0 +1,79 @@
+.about {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+.rightCol {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 60px;
+}
+
+.glassCard {
+  max-width: 560px;
+  width: 100%;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+.heading {
+  font-size: 2.4rem;
+  margin-bottom: 24px;
+}
+
+.bodyText {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--color-grey-light);
+}
+
+@media (max-width: 1024px) {
+  .rightCol {
+    justify-content: center;
+    padding: 0 24px;
+  }
+  .glassCard {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .about {
+    min-height: auto;
+    padding: 100px 0 80px;
+  }
+  .glassCard {
+    padding: 32px 24px;
+  }
+  .heading {
+    font-size: 1.9rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .about {
+    padding: 80px 0 64px;
+  }
+  .glassCard {
+    padding: 28px 20px;
+    border-radius: 18px;
+  }
+  .heading {
+    font-size: 1.6rem;
+    margin-bottom: 16px;
+  }
+  .bodyText {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+}

@@ -1,0 +1,143 @@
+/* ═══════════════════════════════════════════════════════════
+   FullscreenPDFModal — shared overlay/modal for PDF previews
+   ═══════════════════════════════════════════════════════════ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 980px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-dark-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(139, 92, 246, 0.1);
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.topBarTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-white);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topBarActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.downloadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: var(--gradient-primary);
+  color: #fff;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.downloadBtn:hover {
+  opacity: 0.9;
+}
+
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--color-grey-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--color-white);
+}
+
+.closeBtn svg { width: 15px; height: 15px; }
+
+.viewerWrap {
+  flex: 1;
+  min-height: 0;
+}
+
+.iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #1a1a24;
+}
+
+.viewerLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-grey-light);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .overlay { padding: 14px; }
+  .modal { height: 92vh; }
+  .topBar { padding: 12px 14px; }
+}
+
+@media (max-width: 480px) {
+  .modal { height: 94vh; border-radius: 14px; }
+  .overlay { padding: 8px; }
+  .topBarTitle { font-size: 0.82rem; }
+  .downloadBtn { padding: 7px 10px; }
+}
+
+@media (max-width: 360px) {
+  .downloadBtnText { display: none; }
+  .downloadBtn { padding: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .downloadBtn, .closeBtn { transition: none; }
+}
