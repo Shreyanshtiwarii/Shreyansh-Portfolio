@@ -211,12 +211,12 @@
 @media (max-width: 700px) {
   .cardTop {
     flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;
+    text-align: center;
     gap: 18px;
   }
   .coverThumb { width: 84px; height: 110px; }
-  .actions { width: 100%; }
+  .actions { width: 100%; justify-content: center; }
   .downloadBtn, .previewBtn, .fullscreenBtn { flex: 1; justify-content: center; }
 }
 

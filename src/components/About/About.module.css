@@ -7,11 +7,28 @@
   z-index: 10;
 }
 
-.rightCol {
+.container {
+  display: flex;
   width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  box-sizing: border-box;
+}
+
+.leftCol {
+  flex: 1;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-right: 60px;
+}
+
+.rightCol {
   display: flex;
   justify-content: flex-end;
-  padding: 0 60px;
 }
 
 .glassCard {
@@ -37,16 +54,58 @@
   color: var(--color-grey-light);
 }
 
+/* Quote styling */
+.quoteWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quoteText {
+  font-size: clamp(2.2rem, 3vw, 3.5rem);
+  font-weight: 800;
+  font-style: italic;
+  line-height: 1.2;
+  letter-spacing: -1.5px;
+  color: #a78bfa;
+  background: linear-gradient(135deg, #c084fc 0%, #818cf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.15));
+  margin: 0;
+}
+
+.quoteAuthor {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-grey-light);
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+/* Tablet viewports */
 @media (max-width: 1024px) {
-  .rightCol {
+  .container {
     justify-content: center;
     padding: 0 24px;
   }
+  
+  .leftCol {
+    display: none; /* Hide quote on smaller screens to preserve About card layout completely */
+  }
+
+  .rightCol {
+    width: 100%;
+    justify-content: center;
+  }
+  
   .glassCard {
     max-width: 100%;
   }
 }
 
+/* Mobile responsive alignment */
 @media (max-width: 768px) {
   .about {
     min-height: auto;

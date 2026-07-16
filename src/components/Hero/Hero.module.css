@@ -56,7 +56,11 @@
   position: relative;
   z-index: 10;
   max-width: 620px;
-  padding: 0 60px;
+  padding: 0 60px 0 10vw; /* Shifted left padding to 10vw for layout offset */
+}
+
+.mobileHeroImageWrapper {
+  display: none;
 }
 
 /* ── Available for Internship badge ── */
@@ -222,10 +226,20 @@
 
 /* ══ Responsive — unchanged ══ */
 @media (max-width: 1024px) {
+  .hero {
+    min-height: 100vh;
+    height: auto;
+    padding: 120px 0 80px; /* Safe padding for tablet viewport height dynamic scale */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .heroContent {
     max-width: 90%;
     text-align: center;
     margin: 0 auto;
+    padding: 0;
   }
   .ctaGroup {
     justify-content: center;
@@ -234,9 +248,32 @@
     margin-left: auto;
     margin-right: auto;
   }
+
+  .mobileHeroImageWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+
+  .mobileHeroImage {
+    width: 320px; /* Tablet size */
+    height: 320px;
+    border-radius: 24px;
+    object-fit: cover; /* Cover the frame box completely */
+    object-position: center top; /* Align top of photo to preserve hair, crop from bottom */
+    pointer-events: none;
+    border: 4px solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+  }
 }
 
 @media (max-width: 768px) {
+  .hero {
+    padding: 100px 0 60px; /* Shorter top padding for mobile */
+  }
+
   .heroContent {
     padding: 0 24px;
   }
@@ -253,11 +290,21 @@
   .btnPrimary, .btnSecondary {
     width: 100%;
   }
+
+  .mobileHeroImage {
+    width: 250px; /* Medium phone size */
+    height: 250px;
+    margin-bottom: 12px;
+  }
 }
 
 /* Small phones — tighten scale further and give elements room to breathe
    without the section feeling like a wall of stacked text. */
 @media (max-width: 420px) {
+  .hero {
+    padding: 80px 0 40px;
+  }
+
   .badge {
     font-size: 0.7rem;
     padding: 5px 14px;
@@ -291,6 +338,12 @@
   .btnSecondary {
     padding: 13px 24px;
     font-size: 0.88rem;
+  }
+
+  .mobileHeroImage {
+    width: 195px; /* Small phone size */
+    height: 195px;
+    margin-bottom: 8px;
   }
 }
 

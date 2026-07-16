@@ -182,6 +182,15 @@ const Hero = () => {
       {/* Parallax wrapper for text */}
       <div ref={parallaxRef} className={styles.parallaxLayer}>
         <div className={styles.heroContent} ref={textRef}>
+          {/* Mobile Profile Image (Visible on mobile only) */}
+          <div className={styles.mobileHeroImageWrapper}>
+            <img
+              src="/assets/images/hero-character.png"
+              alt="Developer character"
+              className={styles.mobileHeroImage}
+            />
+          </div>
+
           {/* Available for Internship badge */}
           <div className={styles.badge}>
             <span className={styles.badgeDot} />

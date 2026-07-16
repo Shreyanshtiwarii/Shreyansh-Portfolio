@@ -60,7 +60,6 @@ const Footer = () => {
               {OWNER_NAME.split(' ').slice(-1)[0]}
             </span>
           </p>
-          <p className={styles.tagline}>Made with ❤️ using React &amp; Three.js</p>
         </div>
 
         <button className={styles.topBtn} onClick={scrollToTop} aria-label="Back to top">

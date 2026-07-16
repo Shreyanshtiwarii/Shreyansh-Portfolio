@@ -83,7 +83,7 @@ const Resume = () => {
 
             <div className={styles.cardInfo}>
               <h3 className={styles.cardName}>{OWNER_NAME}</h3>
-              <p className={styles.cardRole}>Software Engineer &middot; Full-Stack &amp; Cloud</p>
+              <p className={styles.cardRole}>Software Engineer &middot; Java Backend Developer</p>
               <p className={styles.cardNote}>PDF &middot; Updated 2026 &middot;</p>
 
               <div className={styles.actions}>

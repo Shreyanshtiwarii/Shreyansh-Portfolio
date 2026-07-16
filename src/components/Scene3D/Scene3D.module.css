@@ -1,25 +1,49 @@
 .canvasWrapper {
-  position: fixed;
+  position: absolute; /* Scrolls naturally with the Hero section */
   top: 0;
-  left: 50%;
+  left: 0;
   width: 100%;
-  /* 100vh on mobile is measured against the *largest* possible viewport
-     (address bar hidden). On page load the address bar is usually still
-     showing, so the real viewport is shorter than 100vh -- the canvas
-     gets created taller than the visible area, then R3F's ResizeObserver
-     fires again the instant the browser chrome settles, and the
-     perspective camera's aspect ratio jumps with it. That sudden
-     aspect-ratio change is what reads as the character "suddenly
-     enlarging". 100svh locks to the *smallest* stable viewport (bar
-     visible) so it doesn't move once the page has painted; the plain
-     100vh line is kept first as a fallback for browsers without svh. */
   height: 100vh;
   height: 100svh;
-  transform: translateX(-50%);
-  z-index: 2;
+  z-index: 12; /* Sits above .hero (z-index: 10) to remain visible */
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align right on desktop */
+  padding-right: 12vw;      /* Align where the cursor is */
+  box-sizing: border-box;
 }
 
-.canvasWrapper canvas {
-  pointer-events: auto;
+.heroImage {
+  width: 400px;
+  height: 400px;
+  max-width: 42vw;
+  max-height: 42vw;
+  aspect-ratio: 1 / 1;
+  border-radius: 32px; /* Smooth rounded square frame */
+  object-fit: cover; /* Cover the frame box completely */
+  object-position: center top; /* Align top of photo to preserve hair, crop from bottom */
+  pointer-events: none;
+  border: 5px solid rgba(139, 92, 246, 0.35); /* Purple frame border */
+  box-shadow: 0 0 45px rgba(139, 92, 246, 0.25); /* Ambient glow shadow */
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 1024px) {
+  .canvasWrapper {
+    display: none; /* Hide desktop image wrapper on tablet/mobile */
+  }
 }

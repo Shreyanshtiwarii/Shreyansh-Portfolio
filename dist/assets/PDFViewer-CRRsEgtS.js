@@ -1,0 +1,1 @@
+import{j as s}from"./three-fiber-B_EsI_-j.js";import"./three-core-D27qjJZU.js";const i=({src:a,title:o,className:r})=>s.jsx("iframe",{src:`${a}#toolbar=1&navpanes=0`,title:o,className:r,loading:"lazy"});export{i as default};

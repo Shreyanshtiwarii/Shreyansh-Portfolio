@@ -74,7 +74,10 @@ const CERTIFICATES = getAll('[data-list="cert-entries"] [data-item="cert-entry"]
     description:   getText('[data-field="certDescription"]',  entry),
     skills:        getAll('[data-item="certSkill"]', entry).map((el) => el.textContent.trim()),
     credentialId:  getText('[data-field="certCredentialId"]', entry),
-    image:         null,
+    // Real uploaded certificate image (public/assets/documents/certificates/).
+    // Falls back to '' when a cert has no <img data-field="certImage"> yet,
+    // in which case the card/preview render the generated logo mockup below.
+    image:         getAttr('[data-field="certImage"]', 'src', entry) || null,
     gradient:      getText('[data-field="certGradient"]',     entry),
     accent,
     logo:          (CERT_LOGOS[id] || DEFAULT_CERT_LOGO)(accent),
@@ -136,22 +139,30 @@ const CertificatePreview = ({ cert, onClose }) => {
           {/* Decorative grid */}
           <div className={styles.previewGrid} />
 
-          {/* Cert body */}
-          <div className={styles.certMockup}>
-            <div className={styles.certLogoLarge}>{cert.logo}</div>
-            <div className={styles.certMockupIssuer}>{cert.issuer}</div>
-            <div className={styles.certMockupTitle}>{cert.title}</div>
-            <div className={styles.certMockupLine} style={{ background: cert.accent }} />
-            <div className={styles.certMockupName}>{OWNER_NAME}</div>
-            <div className={styles.certMockupDate}>{cert.date}</div>
-            <div className={styles.certMockupId}>Credential ID: {cert.credentialId}</div>
+          {cert.image ? (
+            <img
+              src={cert.image}
+              alt={`${cert.title} certificate`}
+              className={styles.certPhoto}
+            />
+          ) : (
+            /* Cert body */
+            <div className={styles.certMockup}>
+              <div className={styles.certLogoLarge}>{cert.logo}</div>
+              <div className={styles.certMockupIssuer}>{cert.issuer}</div>
+              <div className={styles.certMockupTitle}>{cert.title}</div>
+              <div className={styles.certMockupLine} style={{ background: cert.accent }} />
+              <div className={styles.certMockupName}>{OWNER_NAME}</div>
+              <div className={styles.certMockupDate}>{cert.date}</div>
+              <div className={styles.certMockupId}>Credential ID: {cert.credentialId}</div>
 
-            {/* Corner seals */}
-            <div className={styles.sealTL} style={{ borderColor: cert.accent }} />
-            <div className={styles.sealTR} style={{ borderColor: cert.accent }} />
-            <div className={styles.sealBL} style={{ borderColor: cert.accent }} />
-            <div className={styles.sealBR} style={{ borderColor: cert.accent }} />
-          </div>
+              {/* Corner seals */}
+              <div className={styles.sealTL} style={{ borderColor: cert.accent }} />
+              <div className={styles.sealTR} style={{ borderColor: cert.accent }} />
+              <div className={styles.sealBL} style={{ borderColor: cert.accent }} />
+              <div className={styles.sealBR} style={{ borderColor: cert.accent }} />
+            </div>
+          )}
 
           {/* Glow overlay */}
           <div className={styles.previewGlow} style={{ background: `radial-gradient(ellipse 60% 50% at 50% 50%, ${cert.accent}22, transparent 70%)` }} />
@@ -280,13 +291,24 @@ const CertCard = ({ cert, index, onPreview }) => {
 
       {/* Image area */}
       <div className={styles.imgArea} style={{ background: cert.gradient }}>
-        <div className={styles.imgGrid} />
+        {cert.image ? (
+          <img
+            src={cert.image}
+            alt={`${cert.title} certificate`}
+            className={styles.certThumb}
+            loading="lazy"
+          />
+        ) : (
+          <>
+            <div className={styles.imgGrid} />
 
-        {/* Floating logo */}
-        <div className={styles.logoWrap}>
-          <div className={styles.logoIcon}>{cert.logo}</div>
-          <div className={styles.logoPulse} style={{ background: cert.accent }} />
-        </div>
+            {/* Floating logo */}
+            <div className={styles.logoWrap}>
+              <div className={styles.logoIcon}>{cert.logo}</div>
+              <div className={styles.logoPulse} style={{ background: cert.accent }} />
+            </div>
+          </>
+        )}
 
         {/* Category pill */}
         <span

@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
@@ -33,13 +33,13 @@ const lerp = (a, b, t) => a + (b - a) * t;
 // When using a GLB: pass the <primitive> as children instead of
 // <BodyGeometry>.
 // ─────────────────────────────────────────────────────────────────────────────
-const CharacterRig = ({ mouse }) => {
+const CharacterRig = ({ mouse, onMeasure }) => {
   const rootRef    = useRef();   // whole character root — float + body rotation
 
   const { scene } = useGLTF('/assets/models/character.glb');
 
   // Enable shadows and calculate automatic scale & ground offset
-  const { scale, positionOffset } = useMemo(() => {
+  const { scale, positionOffset, halfWidth, halfHeight } = useMemo(() => {
     scene.traverse((child) => {
       if (child.isMesh) {
         child.castShadow = true;
@@ -70,9 +70,24 @@ const CharacterRig = ({ mouse }) => {
 
     return {
       scale: s,
-      positionOffset: [xOffset, yOffset, zOffset]
+      positionOffset: [xOffset, yOffset, zOffset],
+      // Real-world (scaled) half-extents. The character's pose here is
+      // wide (arms out to the sides, desk/monitor included) relative to
+      // its height, so a camera framed only from the height risks
+      // cropping the sides on narrow/portrait viewports. Reporting the
+      // actual measured width lets Scene3D's camera rig frame both
+      // dimensions correctly instead of guessing from a screen-width
+      // breakpoint.
+      halfWidth: (size.x * s) / 2,
+      halfHeight: (size.y * s) / 2,
     };
   }, [scene]);
+
+  // Report the measured size once it's known so the camera can pick a
+  // distance that fits the model on whatever aspect ratio it's given.
+  useEffect(() => {
+    onMeasure?.({ halfWidth, halfHeight });
+  }, [halfWidth, halfHeight, onMeasure]);
 
   // Smooth rotation targets (avoid jerk)
   const rot = useRef({ bodyY: 0, bodyX: 0 });
@@ -109,6 +124,6 @@ const CharacterRig = ({ mouse }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // Character  — public export consumed by Scene3D
 // ─────────────────────────────────────────────────────────────────────────────
-const Character = ({ mouse }) => <CharacterRig mouse={mouse} />;
+const Character = ({ mouse, onMeasure }) => <CharacterRig mouse={mouse} onMeasure={onMeasure} />;
 
 export default React.memo(Character);

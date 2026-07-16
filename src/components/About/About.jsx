@@ -53,18 +53,33 @@ const About = () => {
 
   return (
     <section id="about" className={styles.about}>
-      <div className={styles.rightCol}>
-        <div
-          className={styles.glassCard}
-          ref={cardRef}
-          data-education={JSON.stringify(EDUCATION_ENTRIES)}
-        >
-          <h2 className={styles.heading}>
-            About <span className="gradient-text">Me</span>
-          </h2>
-          <p className={styles.bodyText}>
-            {ABOUT_BODY}
-          </p>
+      <div className={styles.container}>
+        {/* Left Column: Premium Quote */}
+        <div className={styles.leftCol}>
+          <div className={styles.quoteWrapper}>
+            <blockquote className={styles.quoteText}>
+              "Code. Learn. Improve. Repeat."
+            </blockquote>
+            <cite className={styles.quoteAuthor}>
+              — Shreyansh Tiwari
+            </cite>
+          </div>
+        </div>
+
+        {/* Right Column: About card */}
+        <div className={styles.rightCol}>
+          <div
+            className={styles.glassCard}
+            ref={cardRef}
+            data-education={JSON.stringify(EDUCATION_ENTRIES)}
+          >
+            <h2 className={styles.heading}>
+              About <span className="gradient-text">Me</span>
+            </h2>
+            <p className={styles.bodyText}>
+              {ABOUT_BODY}
+            </p>
+          </div>
         </div>
       </div>
     </section>

@@ -13,11 +13,12 @@ gsap.registerPlugin(ScrollTrigger);
 const useSmoothScroll = () => {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
+      duration: 1.25,
+      // Exponential ease-out function for a super smooth, long deceleration tail
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.1,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.2,
     });
 
     lenis.on('scroll', ScrollTrigger.update);
