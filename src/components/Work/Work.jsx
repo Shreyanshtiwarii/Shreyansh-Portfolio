@@ -2,35 +2,25 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Work.module.css';
+import { getAll, getText, getAttr } from '../../content/contentLoader.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PROJECTS = [
-  {
-    title: 'Disk Scheduling Simulator',
-    description:
-      'An interactive simulator that visualizes classic disk scheduling algorithms (FCFS, SCAN, SSTF, C-SCAN) to help understand seek time and head movement optimization.',
-    tech: ['Java', 'Data Structures', 'Algorithms'],
-    github: '#',
-    demo: '#',
-  },
-  {
-    title: 'Deadlock Detection Simulator',
-    description:
-      'A visual tool that models resource allocation graphs to detect and demonstrate deadlock conditions in operating systems, aiding in understanding process synchronization.',
-    tech: ['Java', 'Operating Systems', 'Graph Theory'],
-    github: '#',
-    demo: '#',
-  },
-  {
-    title: 'Employee Verification System',
-    description:
-      'A secure full-stack application for verifying employee credentials and records, featuring role-based access, structured data storage, and streamlined verification workflows.',
-    tech: ['Spring Boot', 'React', 'Cloud'],
-    github: '#',
-    demo: '#',
-  },
-];
+// Title, description, tech tags, links, and image all come from content.html
+// now. Images referenced here are plain URL strings pointing into
+// /public/assets/images/projects/ -- Vite serves public/ files verbatim by
+// path, so replacing the file on disk (same filename) updates the site
+// immediately with no rebuild or content.html edit required.
+const PROJECTS = getAll('[data-list="projects"] [data-item="project-entry"]').map((project) => ({
+  title: getText('[data-field="title"]', project),
+  description: getText('[data-field="description"]', project),
+  image: getAttr('[data-field="image"]', 'src', project),
+  tech: Array.from(project.querySelectorAll('[data-list="tech"] [data-item="techTag"]')).map(
+    (el) => el.textContent.trim()
+  ),
+  github: getAttr('[data-field="githubUrl"]', 'href', project),
+  demo: getAttr('[data-field="demoUrl"]', 'href', project),
+}));
 
 const GithubIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -97,7 +87,18 @@ const Work = () => {
               ref={(el) => (cardsRef.current[index] = el)}
               className={styles.card}
             >
-
+              <div className={styles.imagePlaceholder}>
+                {project.image ? (
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className={styles.cardImage}
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className={styles.imagePlaceholderText}>{project.title}</span>
+                )}
+              </div>
 
               <div className={styles.cardBody}>
                 <h3 className={styles.projectTitle}>{project.title}</h3>

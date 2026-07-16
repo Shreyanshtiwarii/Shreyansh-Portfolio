@@ -2,82 +2,65 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Clubs.module.css';
+import { getText, getAll } from '../../content/contentLoader.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Club / organization data — swap `logo` (placeholder svg) for a real image
-// or crest when available.
-// ─────────────────────────────────────────────────────────────────────────────
-const CLUBS = [
-  {
-    id: 'gdg-aitr',
-    name: 'GDG On Campus AITR',
-    role: 'Core Team Member',
-    duration: '2023 — Present',
-    description:
-      'Part of the organizing core for Google Developer Groups on Campus, helping plan technical sessions and community-driven developer events.',
-    tags: ['Community Building', 'Event Planning', 'Public Speaking'],
-    accent: '#4f9eff',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="7" cy="12" r="3.2" stroke="#ea4335" strokeWidth="1.6" />
-        <circle cx="14.5" cy="7" r="3.2" stroke="#4285f4" strokeWidth="1.6" />
-        <circle cx="14.5" cy="17" r="3.2" stroke="#34a853" strokeWidth="1.6" />
-        <circle cx="20" cy="12" r="2" stroke="#fbbc05" strokeWidth="1.6" />
-      </svg>
-    ),
-  },
-  {
-    id: 'gcp-arcade',
-    name: 'Google Cloud Arcade',
-    role: 'Active Participant',
-    duration: '2024 — Present',
-    description:
-      'Participating in Google Cloud Arcade, completing hands-on labs and skill badges to build practical, real-world cloud engineering experience.',
-    tags: ['Google Cloud', 'Hands-on Labs', 'Skill Badges'],
-    accent: '#34a853',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="7" width="18" height="12" rx="2.5" stroke="#34a853" strokeWidth="1.6" />
-        <path d="M8 7V5.5a2 2 0 012-2h4a2 2 0 012 2V7" stroke="#34a853" strokeWidth="1.6" />
-        <circle cx="8.5" cy="13" r="1.3" fill="#34a853" />
-        <circle cx="15.5" cy="13" r="1.3" fill="#34a853" />
-      </svg>
-    ),
-  },
-  {
-    id: 'codespire',
-    name: 'CodeSpire Organizing Team',
-    role: 'Organizing Committee Member',
-    duration: '2024 — Present',
-    description:
-      'Helping coordinate CodeSpire, a coding and hackathon-style initiative — covering logistics, participant outreach, and on-ground event execution.',
-    tags: ['Hackathon Ops', 'Team Coordination', 'Outreach'],
-    accent: '#8b5cf6',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 6l-4 12" stroke="#8b5cf6" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  {
-    id: 'cloud-jam',
-    name: 'Cloud Jam Organizer',
-    role: 'Event Organizer',
-    duration: '2024',
-    description:
-      'Organized Cloud Study Jam sessions, guiding peers through Google Cloud labs and helping them earn skill badges as a group.',
-    tags: ['Google Cloud', 'Mentorship', 'Workshop Facilitation'],
-    accent: '#f59e0b',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="6" width="18" height="15" rx="2" stroke="#f59e0b" strokeWidth="1.6" />
-        <path d="M3 10h18M8 3v4M16 3v4" stroke="#f59e0b" strokeWidth="1.6" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-];
+// ── Club logos — visual design only, NOT editable content.
+// Keyed by clubId so the correct SVG is paired with each content.html entry.
+const CLUB_LOGOS = {
+  'gdg-aitr': (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="7" cy="12" r="3.2" stroke="#ea4335" strokeWidth="1.6" />
+      <circle cx="14.5" cy="7" r="3.2" stroke="#4285f4" strokeWidth="1.6" />
+      <circle cx="14.5" cy="17" r="3.2" stroke="#34a853" strokeWidth="1.6" />
+      <circle cx="20" cy="12" r="2" stroke="#fbbc05" strokeWidth="1.6" />
+    </svg>
+  ),
+  'gcp-arcade': (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="7" width="18" height="12" rx="2.5" stroke="#34a853" strokeWidth="1.6" />
+      <path d="M8 7V5.5a2 2 0 012-2h4a2 2 0 012 2V7" stroke="#34a853" strokeWidth="1.6" />
+      <circle cx="8.5" cy="13" r="1.3" fill="#34a853" />
+      <circle cx="15.5" cy="13" r="1.3" fill="#34a853" />
+    </svg>
+  ),
+  'codespire': (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 6l-4 12" stroke="#8b5cf6" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  'cloud-jam': (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="6" width="18" height="15" rx="2" stroke="#f59e0b" strokeWidth="1.6" />
+      <path d="M3 10h18M8 3v4M16 3v4" stroke="#f59e0b" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  ),
+};
+
+const DEFAULT_CLUB_LOGO = (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+  </svg>
+);
+
+// ── Data — all editable text/values come from content.html ───────────────────
+const CLUBS_SUBTITLE = getText('[data-list="clubs"] [data-field="clubsSubtitle"]');
+
+const CLUBS = getAll('[data-list="clubs"] [data-item="club-entry"]').map((entry) => {
+  const id = getText('[data-field="clubId"]', entry);
+  return {
+    id,
+    name:        getText('[data-field="clubName"]',        entry),
+    role:        getText('[data-field="clubRole"]',        entry),
+    duration:    getText('[data-field="clubDuration"]',    entry),
+    description: getText('[data-field="clubDescription"]', entry),
+    tags:        getAll('[data-item="clubTag"]', entry).map((el) => el.textContent.trim()),
+    accent:      getText('[data-field="clubAccent"]',      entry),
+    logo:        CLUB_LOGOS[id] || DEFAULT_CLUB_LOGO,
+  };
+});
 
 // ── ClubCard ────────────────────────────────────────────────────────────────
 const ClubCard = ({ club }) => {
@@ -190,7 +173,7 @@ const Clubs = () => {
             Community & <span className="gradient-text">Leadership</span>
           </p>
           <p className={styles.subtitle}>
-            Roles and initiatives where I've helped build and grow developer communities.
+            {CLUBS_SUBTITLE}
           </p>
         </div>
 

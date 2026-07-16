@@ -3,14 +3,21 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Globe.module.css';
+import { getText } from '../../content/contentLoader.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Config
+// Config — editable text/location values from content.html
 // ─────────────────────────────────────────────────────────────────────────────
 const RADIUS = 2;
-const INDIA = { lat: 22.7196, lon: 75.8577, label: 'Indore, India' };
+const INDIA = {
+  lat:   parseFloat(getText('[data-field="globe"] [data-field="globeLat"]'))  || 22.7196,
+  lon:   parseFloat(getText('[data-field="globe"] [data-field="globeLon"]'))  || 75.8577,
+  label: getText('[data-field="globe"] [data-field="globeLabel"]') || 'Indore, India',
+};
+const GLOBE_READOUT  = getText('[data-field="globe"] [data-field="globeReadout"]')  || 'Indore, India · 22.72°N, 75.86°E';
+const GLOBE_SUBTITLE = getText('[data-field="globe"] [data-field="globeSubtitle"]') || '';
 const AUTO_ROTATE_SPEED = 0.11;      // rad/sec, idle cruise speed
 const DRAG_ROTATE_FACTOR = 0.0055;   // rad per px of drag
 const DAMPING = 0.9;                 // inertia decay per frame after release
@@ -456,7 +463,7 @@ const Globe = () => {
             Somewhere on <span className="gradient-text">Planet Earth</span>
           </p>
           <p className={styles.subtitle}>
-            Drag to spin the globe — it finds its way back to Indore, India on its own.
+            {GLOBE_SUBTITLE}
           </p>
         </div>
 
@@ -465,7 +472,7 @@ const Globe = () => {
 
           <div className={styles.readout}>
             <span className={styles.readoutDot} />
-            <span>Indore, India · 22.72°N, 75.86°E</span>
+            <span>{ GLOBE_READOUT }</span>
           </div>
 
           <div className={`${styles.hint} ${hint ? '' : styles.hintHidden}`}>

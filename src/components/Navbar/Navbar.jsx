@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Navbar.module.css';
+import { getText } from '../../content/contentLoader.js';
+
+// Owner name from content.html — edit the fullName field there, not here.
+const OWNER_NAME = getText('[data-field="name"] [data-field="fullName"]');
 
 const NAV_LINKS = [
   { label: 'Skills', id: 'skills' },
@@ -89,7 +93,7 @@ const Navbar = () => {
     <nav className={`${styles.navbar} ${scrolled ? styles.navbarScrolled : ''}`}>
       <div className={styles.navInner}>
         <a href="#hero" className={styles.logo} onClick={handleNavClick('hero')}>
-          Shreyansh Tiwari
+          {OWNER_NAME}
         </a>
         <div className={styles.navRight}>
           <ul className={styles.navLinks}>

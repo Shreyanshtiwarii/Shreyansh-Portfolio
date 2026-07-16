@@ -2,139 +2,87 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Certificates.module.css';
+import { getText, getAll, getAttr } from '../../content/contentLoader.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Certificate data — swap `image` for a real URL when available
-// ─────────────────────────────────────────────────────────────────────────────
-const CERTIFICATES = [
-  {
-    id: 'gcp-ace',
-    title: 'Associate Cloud Engineer',
-    issuer: 'Google Cloud',
-    date: '2024',
-    category: 'Cloud',
-    categoryColor: '#4f9eff',
-    description: 'Demonstrates ability to deploy applications, monitor operations, and manage enterprise solutions on Google Cloud Platform.',
-    skills: ['Compute Engine', 'GKE', 'Cloud Storage', 'IAM'],
-    credentialId: 'GCP-ACE-2024',
-    image: null,
-    gradient: 'linear-gradient(135deg, #1a1a3a 0%, #0d1f3c 50%, #1a2a4a 100%)',
-    accent: '#4f9eff',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#4f9eff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'gcp-arcade',
-    title: 'Google Cloud Arcade',
-    issuer: 'Google Cloud',
-    date: '2024',
-    category: 'Cloud',
-    categoryColor: '#4f9eff',
-    description: 'Completed Google Cloud Arcade program with multiple skill badges covering core cloud services and infrastructure.',
-    skills: ['Cloud Run', 'BigQuery', 'Pub/Sub', 'Cloud Functions'],
-    credentialId: 'ARCADE-2024',
-    image: null,
-    gradient: 'linear-gradient(135deg, #0d1a2e 0%, #1a2a4a 50%, #0d1f3c 100%)',
-    accent: '#34a853',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" stroke="#34a853" strokeWidth="1.6"/>
-        <path d="M8 12l3 3 5-5" stroke="#34a853" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'cybersec',
-    title: 'Cybersecurity Fundamentals',
-    issuer: 'IBM / Coursera',
-    date: '2023',
-    category: 'Security',
-    categoryColor: '#f59e0b',
-    description: 'Covers core concepts in cybersecurity including network security, cryptography, and ethical hacking principles.',
-    skills: ['Network Security', 'Cryptography', 'Linux', 'Firewalls'],
-    credentialId: 'IBM-CS-2023',
-    image: null,
-    gradient: 'linear-gradient(135deg, #1f1500 0%, #2a1f00 50%, #1f1a00 100%)',
-    accent: '#f59e0b',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.25C16.5 22.15 20 17.25 20 12V6l-8-4z" stroke="#f59e0b" strokeWidth="1.6" strokeLinejoin="round"/>
-        <path d="M9 12l2 2 4-4" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'react-cert',
-    title: 'React — The Complete Guide',
-    issuer: 'Udemy',
-    date: '2023',
-    category: 'Frontend',
-    categoryColor: '#8b5cf6',
-    description: 'Comprehensive course covering React from fundamentals to advanced patterns including Hooks, Redux, and performance optimisation.',
-    skills: ['React', 'Redux', 'React Router', 'Hooks'],
-    credentialId: 'UDEMY-REACT-2023',
-    image: null,
-    gradient: 'linear-gradient(135deg, #1a0d2e 0%, #2a1a4a 50%, #1a0d3a 100%)',
-    accent: '#8b5cf6',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="2.5" stroke="#8b5cf6" strokeWidth="1.6"/>
-        <ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="#8b5cf6" strokeWidth="1.6"/>
-        <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(60 12 12)" stroke="#8b5cf6" strokeWidth="1.6"/>
-        <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(120 12 12)" stroke="#8b5cf6" strokeWidth="1.6"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'java-cert',
-    title: 'Java Programming Masterclass',
-    issuer: 'Udemy',
-    date: '2023',
-    category: 'Backend',
-    categoryColor: '#10b981',
-    description: 'End-to-end Java course covering OOP, data structures, algorithms, concurrency, and Spring Boot fundamentals.',
-    skills: ['Java', 'OOP', 'Spring Boot', 'Multithreading'],
-    credentialId: 'UDEMY-JAVA-2023',
-    image: null,
-    gradient: 'linear-gradient(135deg, #0d2010 0%, #1a3020 50%, #0d2010 100%)',
-    accent: '#10b981',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8.5 17s-1 .3-1.6.7C6 18.3 8 19 11 19s5-.7 4.1-1.3c-.6-.4-1.6-.7-1.6-.7M8 15.5s-1.1.4-1.8.9c-.9.6 1.1 1.3 4.8 1.3 3.7 0 5.7-.7 4.8-1.3-.7-.5-1.8-.9-1.8-.9" stroke="#10b981" strokeWidth="1.4" strokeLinecap="round"/>
-        <path d="M11.5 3C8 5.5 10 8 10 8s-3-.5-3 2.5c0 2 2 2.5 2 2.5s-3 .5-3 3" stroke="#10b981" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M14 5.5C15 7 14 8.5 14 8.5s2.5.5 2.5 2.5c0 1.5-1.5 2.5-1.5 2.5" stroke="#10b981" strokeWidth="1.4" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'devops',
-    title: 'DevOps & Cloud Native',
-    issuer: 'NPTEL',
-    date: '2024',
-    category: 'Cloud',
-    categoryColor: '#ec4899',
-    description: 'NPTEL course on DevOps practices, CI/CD pipelines, containerisation with Docker, and cloud-native application design.',
-    skills: ['Docker', 'CI/CD', 'Kubernetes', 'GitOps'],
-    credentialId: 'NPTEL-DEV-2024',
-    image: null,
-    gradient: 'linear-gradient(135deg, #1f0d1a 0%, #2a1a24 50%, #1f0d1f 100%)',
-    accent: '#ec4899',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="8" width="18" height="11" rx="2" stroke="#ec4899" strokeWidth="1.6"/>
-        <path d="M7 8V6a2 2 0 012-2h6a2 2 0 012 2v2" stroke="#ec4899" strokeWidth="1.6"/>
-        <path d="M12 12v4M10 14h4" stroke="#ec4899" strokeWidth="1.6" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-];
+// Owner name from content.html — shown on the certificate mockup visual.
+const OWNER_NAME = getText('[data-field="name"] [data-field="fullName"]');
 
-const CATEGORIES = ['All', 'Cloud', 'Security', 'Frontend', 'Backend'];
+// ── Certificate logos — visual design only, NOT editable content.
+// Keyed by certId so the correct SVG is paired with each content.html entry.
+const CERT_LOGOS = {
+  'gcp-ace': (accent) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke={accent} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  'gcp-arcade': (accent) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="10" stroke={accent} strokeWidth="1.6"/>
+      <path d="M8 12l3 3 5-5" stroke={accent} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  'cybersec': (accent) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.25C16.5 22.15 20 17.25 20 12V6l-8-4z" stroke={accent} strokeWidth="1.6" strokeLinejoin="round"/>
+      <path d="M9 12l2 2 4-4" stroke={accent} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  'react-cert': (accent) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="2.5" stroke={accent} strokeWidth="1.6"/>
+      <ellipse cx="12" cy="12" rx="10" ry="4.5" stroke={accent} strokeWidth="1.6"/>
+      <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(60 12 12)" stroke={accent} strokeWidth="1.6"/>
+      <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(120 12 12)" stroke={accent} strokeWidth="1.6"/>
+    </svg>
+  ),
+  'java-cert': (accent) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8.5 17s-1 .3-1.6.7C6 18.3 8 19 11 19s5-.7 4.1-1.3c-.6-.4-1.6-.7-1.6-.7M8 15.5s-1.1.4-1.8.9c-.9.6 1.1 1.3 4.8 1.3 3.7 0 5.7-.7 4.8-1.3-.7-.5-1.8-.9-1.8-.9" stroke={accent} strokeWidth="1.4" strokeLinecap="round"/>
+      <path d="M11.5 3C8 5.5 10 8 10 8s-3-.5-3 2.5c0 2 2 2.5 2 2.5s-3 .5-3 3" stroke={accent} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M14 5.5C15 7 14 8.5 14 8.5s2.5.5 2.5 2.5c0 1.5-1.5 2.5-1.5 2.5" stroke={accent} strokeWidth="1.4" strokeLinecap="round"/>
+    </svg>
+  ),
+  'devops': (accent) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="8" width="18" height="11" rx="2" stroke={accent} strokeWidth="1.6"/>
+      <path d="M7 8V6a2 2 0 012-2h6a2 2 0 012 2v2" stroke={accent} strokeWidth="1.6"/>
+      <path d="M12 12v4M10 14h4" stroke={accent} strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  ),
+};
+
+const DEFAULT_CERT_LOGO = (accent) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3" y="4" width="18" height="16" rx="2" stroke={accent} strokeWidth="1.6"/>
+    <path d="M7 9h10M7 13h6" stroke={accent} strokeWidth="1.6" strokeLinecap="round"/>
+  </svg>
+);
+
+// ── Data — all editable text/values come from content.html ───────────────────
+const CERTIFICATES = getAll('[data-list="cert-entries"] [data-item="cert-entry"]').map((entry) => {
+  const id     = getText('[data-field="certId"]',       entry);
+  const accent = getText('[data-field="certAccent"]',   entry);
+  return {
+    id,
+    title:         getText('[data-field="certTitle"]',        entry),
+    issuer:        getText('[data-field="certIssuer"]',       entry),
+    date:          getText('[data-field="certDate"]',         entry),
+    category:      getText('[data-field="certCategory"]',     entry),
+    categoryColor: getText('[data-field="certCategoryColor"]',entry),
+    description:   getText('[data-field="certDescription"]',  entry),
+    skills:        getAll('[data-item="certSkill"]', entry).map((el) => el.textContent.trim()),
+    credentialId:  getText('[data-field="certCredentialId"]', entry),
+    image:         null,
+    gradient:      getText('[data-field="certGradient"]',     entry),
+    accent,
+    logo:          (CERT_LOGOS[id] || DEFAULT_CERT_LOGO)(accent),
+  };
+});
+
+const CATEGORIES = getAll('[data-list="cert-categories"] [data-item="cert-category"]')
+  .map((el) => el.textContent.trim());
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CertificatePreview — fullscreen popup
@@ -194,7 +142,7 @@ const CertificatePreview = ({ cert, onClose }) => {
             <div className={styles.certMockupIssuer}>{cert.issuer}</div>
             <div className={styles.certMockupTitle}>{cert.title}</div>
             <div className={styles.certMockupLine} style={{ background: cert.accent }} />
-            <div className={styles.certMockupName}>Shreyansh Tiwari</div>
+            <div className={styles.certMockupName}>{OWNER_NAME}</div>
             <div className={styles.certMockupDate}>{cert.date}</div>
             <div className={styles.certMockupId}>Credential ID: {cert.credentialId}</div>
 

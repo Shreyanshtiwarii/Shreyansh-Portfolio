@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './AcademicJourney.module.css';
-import { ACADEMIC_JOURNEY } from '../../content/academicJourney.js';
+import { getText, getAll } from '../../content/contentLoader.js';
 
 // Shared with Resume — code-split so the PDF viewer (and the file it loads)
 // is only fetched once a preview is actually opened.
@@ -10,6 +10,26 @@ const PDFViewer = lazy(() => import('../shared/PDFViewer.jsx'));
 const FullscreenPDFModal = lazy(() => import('../shared/FullscreenPDFModal.jsx'));
 
 gsap.registerPlugin(ScrollTrigger);
+
+// ── Data — all editable values come from content.html ────────────────────────
+const ACADEMIC_SUBTITLE = getText('[data-list="academicJourney"] [data-field="academicSubtitle"]');
+
+const ACADEMIC_JOURNEY = getAll('[data-list="academicJourney"] [data-item="semester-entry"]').map((entry) => {
+  const sgpaRaw = getText('[data-field="semSgpa"]', entry).trim();
+  const cgpaRaw = getText('[data-field="semCgpa"]', entry).trim();
+  const marksheetUrl      = getText('[data-field="semMarksheetUrl"]',      entry).trim() || null;
+  const marksheetFilename = getText('[data-field="semMarksheetFilename"]', entry).trim() || null;
+  return {
+    id:               getText('[data-field="semId"]',     entry),
+    semester:         parseInt(getText('[data-field="semNumber"]', entry), 10),
+    sgpa:             sgpaRaw ? parseFloat(sgpaRaw) : null,
+    cgpa:             cgpaRaw ? parseFloat(cgpaRaw) : null,
+    status:           getText('[data-field="semStatus"]', entry),
+    subjects:         getAll('[data-item="semSubject"]', entry).map((el) => el.textContent.trim()),
+    marksheetUrl,
+    marksheetFilename,
+  };
+});
 
 // ── SemesterCard ──────────────────────────────────────────────────────────────
 const SemesterCard = ({ data, onOpenFullscreen }) => {
@@ -165,7 +185,7 @@ const AcademicJourney = () => {
             Semester-wise <span className="gradient-text">Progress</span>
           </p>
           <p className={styles.subtitle}>
-            SGPA, CGPA, and subjects for every semester — with marksheets available to preview or download.
+            {ACADEMIC_SUBTITLE}
           </p>
         </div>
 

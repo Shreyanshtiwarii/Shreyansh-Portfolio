@@ -2,8 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Footer.module.css';
+import { getText } from '../../content/contentLoader.js';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Owner name from content.html — edit the fullName field there, not here.
+const OWNER_NAME = getText('[data-field="name"] [data-field="fullName"]');
 
 const ArrowUpIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,7 +55,10 @@ const Footer = () => {
       <div className={`section-container ${styles.inner}`}>
         <div className={styles.left}>
           <p className={styles.name}>
-            Shreyansh <span className="gradient-text">Tiwari</span>
+            {OWNER_NAME.split(' ').slice(0, -1).join(' ')}{' '}
+            <span className="gradient-text">
+              {OWNER_NAME.split(' ').slice(-1)[0]}
+            </span>
           </p>
           <p className={styles.tagline}>Made with ❤️ using React &amp; Three.js</p>
         </div>

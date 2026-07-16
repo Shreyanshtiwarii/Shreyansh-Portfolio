@@ -2,35 +2,18 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Experience.module.css';
+import { getAll, getText } from '../../content/contentLoader.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const EXPERIENCE_ITEMS = [
-  {
-    title: 'Google Cloud Arcade Facilitator',
-    subtitle: 'Google Cloud',
-    description:
-      'Guided peers through Google Cloud Arcade quests and labs, helping them build hands-on cloud skills and complete skill badges within program timelines.',
-  },
-  {
-    title: 'GDG On Campus Volunteer',
-    subtitle: 'Google Developer Groups',
-    description:
-      'Supported the organization of developer-focused sessions and workshops on campus, helping coordinate logistics and encourage student participation in tech events.',
-  },
-  {
-    title: 'Cloud Jam Organizer',
-    subtitle: 'Cloud Study Jam',
-    description:
-      'Co-organized a Cloud Study Jam event, assisting participants with environment setup, lab walkthroughs, and troubleshooting during hands-on cloud sessions.',
-  },
-  {
-    title: 'Hackathon Participant',
-    subtitle: 'Collegiate Hackathon',
-    description:
-      'Collaborated within a team to design and build a working prototype under time constraints, applying full-stack development and problem-solving skills.',
-  },
-];
+// Experience entries from content.html — add/remove/edit entries there, not here.
+const EXPERIENCE_ITEMS = getAll('[data-list="experience"] [data-item="experience-entry"]').map(
+  (entry) => ({
+    title:       getText('[data-field="title"]',       entry),
+    subtitle:    getText('[data-field="subtitle"]',    entry),
+    description: getText('[data-field="description"]', entry),
+  })
+);
 
 const Experience = () => {
   const sectionRef = useRef(null);

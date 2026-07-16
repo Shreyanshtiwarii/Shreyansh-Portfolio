@@ -2,8 +2,47 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './DevConsole.module.css';
+import { getText, getAll } from '../../content/contentLoader.js';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Content from content.html — edit values there, not here.
+const OWNER_NAME     = getText('[data-field="name"] [data-field="fullName"]');
+const OWNER_LOCATION = getText('[data-field="contact"] [data-field="location"]');
+
+// whoami fields
+const WHOAMI_ROLE    = getText('[data-field="devConsole"] [data-field="whoamiRole"]')    || 'CS Engineering Student';
+const WHOAMI_FOCUS   = getText('[data-field="devConsole"] [data-field="whoamiFocus"]')   || 'Cloud · Cybersecurity · Full Stack';
+const WHOAMI_STATUS  = getText('[data-field="devConsole"] [data-field="whoamiStatus"]')  || '🟢  Available for Internship';
+const WHOAMI_PASSION = getText('[data-field="devConsole"] [data-field="whoamiPassion"]') || 'Building interactive apps with beautiful UI';
+
+// skills — pulled from the skills section already in content.html
+const SKILL_GROUPS = getAll('[data-list="skills"] [data-item="skill-category"]').map((cat) => ({
+  label: getText('[data-field="categoryName"]', cat),
+  items: getAll('[data-item="skillName"]', cat).map((el) => el.textContent.trim()),
+}));
+
+// projects — pulled from the projects section already in content.html
+const CONSOLE_PROJECTS = getAll('[data-list="projects"] [data-item="project-entry"]').map((entry) => ({
+  name: getText('[data-field="title"]', entry),
+  tech: getAll('[data-item="techTag"]', entry).map((el) => el.textContent.trim()),
+  desc: getText('[data-field="description"]', entry),
+}));
+
+// education — pulled from the education section already in content.html
+const EDU_ENTRIES = getAll('[data-list="education"] [data-item="education-entry"]').map((entry) => ({
+  degree:  getText('[data-field="degree"]',  entry),
+  school:  getText('[data-field="school"]',  entry),
+  status:  getText('[data-field="status"]',  entry),
+  details: getAll('[data-item="course"]', entry).map((el) => el.textContent.trim()),
+}));
+
+// experience — pulled from the experience section already in content.html
+const EXP_ENTRIES = getAll('[data-list="experience"] [data-item="experience-entry"]').map((entry) => ({
+  role: getText('[data-field="title"]',       entry),
+  org:  getText('[data-field="subtitle"]',    entry),
+  desc: getText('[data-field="description"]', entry),
+}));
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Terminal data
@@ -26,64 +65,40 @@ const COMMANDS = {
   whoami: {
     hint: 'About me',
     output: [
-      { type: 'title',  text: 'Shreyansh Tiwari' },
-      { type: 'kv', key: 'Role',     value: 'CS Engineering Student' },
-      { type: 'kv', key: 'Focus',    value: 'Cloud · Cybersecurity · Full Stack' },
-      { type: 'kv', key: 'Status',   value: '🟢  Available for Internship' },
-      { type: 'kv', key: 'Passion',  value: 'Building interactive apps with beautiful UI' },
-      { type: 'kv', key: 'Location', value: 'Indore, India' },
+      { type: 'title',  text: OWNER_NAME },
+      { type: 'kv', key: 'Role',     value: WHOAMI_ROLE },
+      { type: 'kv', key: 'Focus',    value: WHOAMI_FOCUS },
+      { type: 'kv', key: 'Status',   value: WHOAMI_STATUS },
+      { type: 'kv', key: 'Passion',  value: WHOAMI_PASSION },
+      { type: 'kv', key: 'Location', value: OWNER_LOCATION },
     ],
   },
   skills: {
     hint: 'Technical skill set',
     output: [
       { type: 'title', text: 'Technical Skills' },
-      { type: 'group', label: 'Frontend',  items: ['HTML', 'CSS', 'JavaScript', 'React'] },
-      { type: 'group', label: 'Backend',   items: ['Java', 'Spring Boot'] },
-      { type: 'group', label: 'Cloud',     items: ['Google Cloud Platform'] },
-      { type: 'group', label: 'Security',  items: ['Linux', 'Networking'] },
-      { type: 'group', label: 'Languages', items: ['C++', 'Python'] },
+      ...SKILL_GROUPS.map(({ label, items }) => ({ type: 'group', label, items })),
     ],
   },
   projects: {
     hint: 'Featured projects',
     output: [
       { type: 'title', text: 'Projects' },
-      { type: 'project', name: 'Disk Scheduling Simulator',
-        tech: ['Java', 'Algorithms'],
-        desc: 'Visualizes FCFS, SCAN, SSTF, C-SCAN disk scheduling algorithms.' },
-      { type: 'project', name: 'Deadlock Detection Simulator',
-        tech: ['Java', 'Graph Theory'],
-        desc: 'Models resource allocation graphs to detect OS deadlock conditions.' },
-      { type: 'project', name: 'Employee Verification System',
-        tech: ['Spring Boot', 'React', 'Cloud'],
-        desc: 'Full-stack credential verification with role-based access control.' },
+      ...CONSOLE_PROJECTS.map(({ name, tech, desc }) => ({ type: 'project', name, tech, desc })),
     ],
   },
   education: {
     hint: 'Academic background',
     output: [
       { type: 'title', text: 'Education' },
-      { type: 'edu',
-        degree:  'B.Tech — Computer Science Engineering',
-        school:  'University',
-        status:  'Currently Enrolled',
-        details: ['Data Structures & Algorithms', 'Operating Systems',
-                  'Computer Networks', 'Cloud Computing'] },
+      ...EDU_ENTRIES.map(({ degree, school, status, details }) => ({ type: 'edu', degree, school, status, details })),
     ],
   },
   experience: {
     hint: 'Roles & activities',
     output: [
       { type: 'title', text: 'Experience' },
-      { type: 'exp', role: 'Google Cloud Arcade Facilitator', org: 'Google Cloud',
-        desc: 'Guided peers through Cloud Arcade quests and skill badge labs.' },
-      { type: 'exp', role: 'GDG On Campus Volunteer', org: 'Google Developer Groups',
-        desc: 'Coordinated developer sessions and workshops on campus.' },
-      { type: 'exp', role: 'Cloud Jam Organizer', org: 'Cloud Study Jam',
-        desc: 'Co-organized hands-on cloud lab events with live support.' },
-      { type: 'exp', role: 'Hackathon Participant', org: 'Collegiate Hackathon',
-        desc: 'Built and presented projects under competitive time constraints.' },
+      ...EXP_ENTRIES.map(({ role, org, desc }) => ({ type: 'exp', role, org, desc })),
     ],
   },
 };

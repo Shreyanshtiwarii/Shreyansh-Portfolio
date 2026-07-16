@@ -5,8 +5,13 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Desk, Laptop, Monitor, Keyboard, Mouse, CoffeeMug, Books, Plant, RGBStrip } from './RoomModels.jsx';
 import styles from './DevRoom.module.css';
+import { getText } from '../../content/contentLoader.js';
 
 const MiniGame = lazy(() => import('./MiniGame.jsx'));
+
+// Subtitle from content.html — edit there, not here.
+const DEVROOM_SUBTITLE = getText('[data-field="devRoom"] [data-field="devRoomSubtitle"]') ||
+  'A little 3D corner of where the code happens. Move your cursor to look around, and click on things.';
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -171,8 +176,7 @@ const DevRoom = () => {
             The <span className="gradient-text">Workspace</span>
           </h2>
           <p className={styles.subtitle}>
-            A little 3D corner of where the code happens. Move your cursor to look
-            around, and click on things.
+            {DEVROOM_SUBTITLE}
           </p>
         </div>
 

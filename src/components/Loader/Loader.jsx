@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import styles from './Loader.module.css';
+import { getText } from '../../content/contentLoader.js';
 
 const LOAD_DURATION = 1600; // ms, kept under 2 seconds
+
+// Owner name from content.html — edit the fullName field there, not here.
+const OWNER_NAME = getText('[data-field="name"] [data-field="fullName"]');
 
 const Loader = ({ onComplete }) => {
   const [visible, setVisible] = useState(true);
@@ -36,7 +40,10 @@ const Loader = ({ onComplete }) => {
     <div className={styles.overlay} ref={overlayRef}>
       <div className={styles.content}>
         <p className={styles.name}>
-          Shreyansh <span className="gradient-text">Tiwari</span>
+          {OWNER_NAME.split(' ').slice(0, -1).join(' ')}{' '}
+          <span className="gradient-text">
+            {OWNER_NAME.split(' ').slice(-1)[0]}
+          </span>
         </p>
         <p className={styles.status}>Loading...</p>
         <div className={styles.barTrack}>

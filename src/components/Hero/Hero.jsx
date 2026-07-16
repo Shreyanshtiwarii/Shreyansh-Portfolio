@@ -2,6 +2,33 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import styles from './Hero.module.css';
 
+// `?raw` makes Vite inline content.html as a plain string at build time --
+// no fetch, no network request, no async loading state, so this is
+// available synchronously before first render (same timing GSAP's entrance
+// animation already relies on) and nothing else about the app's load
+// sequence changes.
+import contentHtml from '../../content/content.html?raw';
+
+// Parsed once at module load (not per-render) since the source string is
+// static. Only reads the fields Hero actually uses -- Name, Designation,
+// Hero description, Profile image, Resume link -- everything else in
+// content.html is left alone for other sections to wire up later.
+const parseHeroContent = (html) => {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const text = (selector) => doc.querySelector(selector)?.textContent?.trim() ?? '';
+  const attr = (selector, name) => doc.querySelector(selector)?.getAttribute(name) ?? '';
+
+  return {
+    name: text('[data-field="name"] [data-field="fullName"]'),
+    designation: text('[data-field="name"] [data-field="tagline"]'),
+    description: text('[data-field="heroContent"] [data-field="description"]'),
+    profileImage: attr('[data-field="heroContent"] [data-field="profileImage"]', 'src'),
+    resumeLink: attr('[data-field="resume"] [data-field="resumePath"]', 'href'),
+  };
+};
+
+const HERO_CONTENT = parseHeroContent(contentHtml);
+
 const Hero = () => {
   const textRef = useRef(null);
   const sectionRef = useRef(null);
@@ -145,7 +172,13 @@ const Hero = () => {
   };
 
   return (
-    <section id="hero" className={styles.hero} ref={sectionRef}>
+    <section
+      id="hero"
+      className={styles.hero}
+      ref={sectionRef}
+      data-profile-image={HERO_CONTENT.profileImage}
+      data-resume-link={HERO_CONTENT.resumeLink}
+    >
       {/* Parallax wrapper for text */}
       <div ref={parallaxRef} className={styles.parallaxLayer}>
         <div className={styles.heroContent} ref={textRef}>
@@ -157,11 +190,11 @@ const Hero = () => {
 
           <h2 className={styles.subLine}>I'm</h2>
           <h1 className={styles.name}>
-            <span className="gradient-text">Shreyansh Tiwari</span>
+            <span className="gradient-text">{HERO_CONTENT.name}</span>
           </h1>
           <p className={styles.welcome}>Welcome to my Portfolio</p>
-          <p className={styles.role}>Computer Science Engineering Student</p>
-          <p className={styles.tags}>Cloud • Cybersecurity • Full Stack Developer</p>
+          <p className={styles.role}>{HERO_CONTENT.designation}</p>
+          <p className={styles.tags}>{HERO_CONTENT.description}</p>
 
           <div className={styles.ctaGroup}>
             <button className={styles.btnPrimary} onClick={scrollTo('work')}>

@@ -2,102 +2,73 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Achievements.module.css';
+import { getAll, getText } from '../../content/contentLoader.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ── Data ─────────────────────────────────────────────────────────────────────
-const STATS = [
-  {
-    id: 'projects',
-    value: 10,
-    suffix: '+',
-    label: 'Projects Built',
-    sub: 'Full-stack & systems',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
-        <rect x="13" y="3" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
-        <rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
-        <rect x="13" y="13" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
-      </svg>
-    ),
-    color: '#8b5cf6',
-    glow: 'rgba(139,92,246,0.35)',
-  },
-  {
-    id: 'certificates',
-    value: 15,
-    suffix: '+',
-    label: 'Certificates',
-    sub: 'Google Cloud & more',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 15l-3 3 1-4-3.5-3 4.5-.5L12 7l1 3.5 4.5.5L14 14l1 4-3-3z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6"/>
-      </svg>
-    ),
-    color: '#f59e0b',
-    glow: 'rgba(245,158,11,0.35)',
-  },
-  {
-    id: 'hackathons',
-    value: 5,
-    suffix: '+',
-    label: 'Hackathons',
-    sub: 'Competed & presented',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>
-      </svg>
-    ),
-    color: '#10b981',
-    glow: 'rgba(16,185,129,0.35)',
-  },
-  {
-    id: 'coding',
-    value: 200,
-    suffix: '+',
-    label: 'Coding Problems',
-    sub: 'DSA & competitive',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 6l-4 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-    color: '#3b82f6',
-    glow: 'rgba(59,130,246,0.35)',
-  },
-  {
-    id: 'events',
-    value: 10,
-    suffix: '+',
-    label: 'Events Organized',
-    sub: 'GDG, Cloud Jams',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="6" width="18" height="15" rx="2" stroke="currentColor" strokeWidth="1.6"/>
-        <path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-      </svg>
-    ),
-    color: '#ec4899',
-    glow: 'rgba(236,72,153,0.35)',
-  },
-  {
-    id: 'skills',
-    value: 12,
-    suffix: '+',
-    label: 'Technologies',
-    sub: 'Cloud, Web, Security',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6"/>
-        <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-      </svg>
-    ),
-    color: '#a78bfa',
-    glow: 'rgba(167,139,250,0.35)',
-  },
-];
+// ── Icons — visual design, NOT editable content; keyed by statId ─────────────
+const STAT_ICONS = {
+  projects: (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
+      <rect x="13" y="3" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
+      <rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
+      <rect x="13" y="13" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
+    </svg>
+  ),
+  certificates: (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 15l-3 3 1-4-3.5-3 4.5-.5L12 7l1 3.5 4.5.5L14 14l1 4-3-3z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6"/>
+    </svg>
+  ),
+  hackathons: (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>
+    </svg>
+  ),
+  coding: (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 6l-4 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  events: (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="6" width="18" height="15" rx="2" stroke="currentColor" strokeWidth="1.6"/>
+      <path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  ),
+  skills: (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6"/>
+      <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  ),
+};
+
+// Default icon for any stat whose id has no entry in STAT_ICONS above.
+const DEFAULT_STAT_ICON = (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.6"/>
+  </svg>
+);
+
+// ── Data — all editable values come from content.html ────────────────────────
+const ACHIEVEMENTS_SUBTITLE = getText('[data-list="achievements"] [data-field="achievementsSubtitle"]');
+
+const STATS = getAll('[data-list="achievements"] [data-item="stat-entry"]').map((entry) => {
+  const id = getText('[data-field="statId"]', entry);
+  return {
+    id,
+    value:  parseInt(getText('[data-field="statValue"]', entry), 10) || 0,
+    suffix: getText('[data-field="statSuffix"]', entry),
+    label:  getText('[data-field="statLabel"]',  entry),
+    sub:    getText('[data-field="statSub"]',    entry),
+    color:  getText('[data-field="statColor"]',  entry),
+    glow:   getText('[data-field="statGlow"]',   entry),
+    icon:   STAT_ICONS[id] || DEFAULT_STAT_ICON,
+  };
+});
 
 // ── useCountUp ────────────────────────────────────────────────────────────────
 // Counts from 0 → target when `active` flips to true.
@@ -256,7 +227,7 @@ const Achievements = () => {
             By the <span className="gradient-text">Numbers</span>
           </p>
           <p className={styles.subtitle}>
-            A snapshot of what I've built, learned, and contributed.
+            {ACHIEVEMENTS_SUBTITLE}
           </p>
         </div>
 

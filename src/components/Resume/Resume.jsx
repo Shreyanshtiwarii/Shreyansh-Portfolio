@@ -2,6 +2,7 @@ import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Resume.module.css';
+import { getAttr, getText } from '../../content/contentLoader.js';
 
 // The actual <iframe> embed is code-split — it (and the PDF it requests)
 // is only ever loaded once the person opens the inline or fullscreen preview.
@@ -12,8 +13,19 @@ const FullscreenPDFModal = lazy(() => import('../shared/FullscreenPDFModal.jsx')
 
 gsap.registerPlugin(ScrollTrigger);
 
-const RESUME_SRC = '/assets/documents/resume/resume-placeholder.pdf';
-const RESUME_FILENAME = 'Shreyansh_Tiwari_Resume.pdf';
+// Owner name from content.html — used in the resume card header.
+const OWNER_NAME = getText('[data-field="name"] [data-field="fullName"]');
+
+// Resume path and download filename from content.html — edit the resumePath
+// href and data-field-filename attribute there, not here.
+const RESUME_SRC = getAttr(
+  '[data-field="resume"] [data-field="resumePath"]',
+  'href'
+) || '/assets/documents/resume/resume-placeholder.pdf';
+
+const RESUME_FILENAME =
+  getAttr('[data-field="resume"] [data-field="resumePath"]', 'data-field-filename') ||
+  'Shreyansh_Tiwari_Resume.pdf';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Resume — main section
@@ -70,7 +82,7 @@ const Resume = () => {
             </div>
 
             <div className={styles.cardInfo}>
-              <h3 className={styles.cardName}>Shreyansh Tiwari</h3>
+              <h3 className={styles.cardName}>{OWNER_NAME}</h3>
               <p className={styles.cardRole}>Software Engineer &middot; Full-Stack &amp; Cloud</p>
               <p className={styles.cardNote}>PDF &middot; Updated 2026 &middot; Placeholder document</p>
 
