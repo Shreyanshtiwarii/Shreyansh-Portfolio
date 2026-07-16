@@ -89,7 +89,7 @@ const Resume = () => {
               <div className={styles.actions}>
                 <a
                   className={styles.downloadBtn}
-                  href={public/assets/documents/resume/Shreyansh_Tiwari_Resume.pdf}
+                  href={RESUME_SRC}
                   download={RESUME_FILENAME}
                 >
                   <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
