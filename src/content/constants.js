@@ -12,15 +12,15 @@ export const NAV_LINKS = [
 ];
 
 export const SOCIAL_URLS = {
-  GITHUB:    'https://github.com/',
-  LINKEDIN:  'https://linkedin.com/',
+  GITHUB:    'https://github.com/Shreyanshtiwarii',
+  LINKEDIN:  'https://www.linkedin.com/in/shreyansh-tiwari-483a7231a',
   INSTAGRAM: 'https://instagram.com/',
-  EMAIL:     'mailto:shreyanshtiwari.cs@gmail.com',
+  EMAIL:     'mailto:tshreyansh029@gmail.com',
 };
 
 export const OWNER = {
   NAME:     'Shreyansh Tiwari',
-  EMAIL:    'shreyanshtiwari.cs@gmail.com',
-  LINKEDIN: 'linkedin.com/in/shreyansh-tiwari',
+  EMAIL:    'tshreyansh029@gmail.com',
+  LINKEDIN: 'https://www.linkedin.com/in/shreyansh-tiwari-483a7231a',
   LOCATION: 'Indore, India',
 };

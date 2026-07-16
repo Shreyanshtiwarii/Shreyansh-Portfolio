@@ -20,7 +20,7 @@ export const CHUNK_NAMES = {
 };
 
 /** Character model path (served from /public/assets/models/) */
-export const CHARACTER_MODEL_PATH = '/assets/models/character.glb';
+export const CHARACTER_MODEL_PATH = 'public/assets/models/character.glb';
 
 /** Public document paths */
 export const DOCUMENT_PATHS = {
