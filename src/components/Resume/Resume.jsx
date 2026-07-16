@@ -84,12 +84,12 @@ const Resume = () => {
             <div className={styles.cardInfo}>
               <h3 className={styles.cardName}>{OWNER_NAME}</h3>
               <p className={styles.cardRole}>Software Engineer &middot; Full-Stack &amp; Cloud</p>
-              <p className={styles.cardNote}>PDF &middot; Updated 2026 &middot; Placeholder document</p>
+              <p className={styles.cardNote}>PDF &middot; Updated 2026 &middot;</p>
 
               <div className={styles.actions}>
                 <a
                   className={styles.downloadBtn}
-                  href={RESUME_SRC}
+                  href={public/assets/documents/resume/Shreyansh_Tiwari_Resume.pdf}
                   download={RESUME_FILENAME}
                 >
                   <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
