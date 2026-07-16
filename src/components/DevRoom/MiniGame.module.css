@@ -319,6 +319,113 @@
   text-shadow: 0 0 15px rgba(250, 191, 36, 0.35);
 }
 
+/* ── On-Screen Touch Controls (virtual joystick + jump button) ──
+   Always mounted while playing, but hidden on devices that have a fine
+   (mouse/trackpad) pointer so desktop users never see them, even on a
+   touch-enabled laptop with a mouse attached. */
+.touchControls {
+  position: fixed;
+  inset: 0;
+  z-index: 20; /* above HUD (5) and canvas, below menus which only render when not playing */
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .touchControls {
+    display: none;
+  }
+}
+
+.joystickBase {
+  position: absolute;
+  left: max(28px, env(safe-area-inset-left));
+  bottom: max(28px, env(safe-area-inset-bottom));
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(139, 92, 246, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  touch-action: none;
+  pointer-events: auto;
+}
+
+.joystickThumb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(139, 92, 246, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.4);
+}
+
+.jumpBtn {
+  position: absolute;
+  right: max(28px, env(safe-area-inset-right));
+  bottom: max(40px, env(safe-area-inset-bottom));
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: rgba(79, 158, 255, 0.2);
+  border: 2px solid rgba(79, 158, 255, 0.55);
+  color: #cfe3ff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.jumpBtn:active {
+  background: rgba(79, 158, 255, 0.4);
+  transform: scale(0.93);
+}
+
+/* Instruction line shown only on touch devices (mirrors .touchControls) */
+.touchOnlyHint {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .touchOnlyHint {
+    display: flex;
+  }
+}
+
+/* ── Small phones: shrink controls slightly & hug the safe area ──── */
+@media (max-width: 480px) {
+  .joystickBase {
+    width: 100px;
+    height: 100px;
+    left: max(20px, env(safe-area-inset-left));
+    bottom: max(20px, env(safe-area-inset-bottom));
+  }
+  .joystickThumb {
+    width: 44px;
+    height: 44px;
+  }
+  .jumpBtn {
+    width: 68px;
+    height: 68px;
+    right: max(20px, env(safe-area-inset-right));
+    bottom: max(28px, env(safe-area-inset-bottom));
+    font-size: 0.65rem;
+  }
+}
+
 /* ── Tablet responsiveness ───────────────────────────────────── */
 @media (max-width: 768px) {
   .hud {

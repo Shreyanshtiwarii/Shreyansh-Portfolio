@@ -3,6 +3,12 @@
   width: 100%;
   padding: 140px 0;
   z-index: 10;
+  /* Timeline cards animate in from ±80px off to the side (see Experience.jsx).
+     Without a clip boundary here, that off-screen starting position counts
+     toward the page's scrollable area on mobile, which silently widens the
+     whole site's layout viewport and makes everything horizontally
+     scrollable -- not just this section. */
+  overflow-x: hidden;
 }
 
 .heading {

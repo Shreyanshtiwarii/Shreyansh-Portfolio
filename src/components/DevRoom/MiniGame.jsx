@@ -77,7 +77,11 @@ function useKeyboard() {
   const keys = useRef({
     w: false, s: false, a: false, d: false,
     ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false,
-    space: false
+    space: false,
+    // Analog input from the on-screen virtual joystick (range -1..1 on each axis).
+    // Populated by <TouchControls>; left at 0 when no touch input is active so
+    // keyboard-only play is completely unaffected.
+    joyX: 0, joyZ: 0
   });
 
   useEffect(() => {
@@ -109,6 +113,122 @@ function useKeyboard() {
 
   return keys;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Touch Controls (virtual joystick + jump button)
+// Feeds the exact same `keys` ref the keyboard listener uses, so the physics
+// loop in GameScene doesn't need to know or care which input source is active.
+// Hidden automatically on devices with a fine (mouse) pointer via CSS, so it
+// never shows up for desktop users even though it's always mounted.
+// ─────────────────────────────────────────────────────────────────────────────
+const JOYSTICK_RADIUS = 46; // px — max thumb travel from center, matches CSS base size
+
+const TouchControls = ({ keys, active }) => {
+  const baseRef = useRef(null);
+  const thumbRef = useRef(null);
+  const originRef = useRef({ x: 0, y: 0 });
+  const activePointerId = useRef(null);
+
+  const setThumb = (dx, dy) => {
+    if (thumbRef.current) {
+      thumbRef.current.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+    }
+  };
+
+  const updateFromPoint = (clientX, clientY) => {
+    let dx = clientX - originRef.current.x;
+    let dy = clientY - originRef.current.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist > JOYSTICK_RADIUS) {
+      dx = (dx / dist) * JOYSTICK_RADIUS;
+      dy = (dy / dist) * JOYSTICK_RADIUS;
+    }
+    setThumb(dx, dy);
+    // Map screen X -> world X (left/right) and screen Y -> world Z (forward/back)
+    keys.current.joyX = dx / JOYSTICK_RADIUS;
+    keys.current.joyZ = dy / JOYSTICK_RADIUS;
+  };
+
+  const releaseJoystick = () => {
+    activePointerId.current = null;
+    keys.current.joyX = 0;
+    keys.current.joyZ = 0;
+    setThumb(0, 0);
+  };
+
+  const handleJoyPointerDown = (e) => {
+    e.preventDefault();
+    const rect = baseRef.current.getBoundingClientRect();
+    originRef.current = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    activePointerId.current = e.pointerId;
+    baseRef.current.setPointerCapture?.(e.pointerId);
+    updateFromPoint(e.clientX, e.clientY);
+  };
+
+  const handleJoyPointerMove = (e) => {
+    if (activePointerId.current !== e.pointerId) return;
+    e.preventDefault();
+    updateFromPoint(e.clientX, e.clientY);
+  };
+
+  const handleJoyPointerUp = (e) => {
+    if (activePointerId.current !== e.pointerId) return;
+    e.preventDefault();
+    releaseJoystick();
+  };
+
+  const handleJumpDown = (e) => {
+    e.preventDefault();
+    keys.current.space = true;
+  };
+
+  const handleJumpUp = (e) => {
+    e.preventDefault();
+    keys.current.space = false;
+  };
+
+  // Safety net: if the game overlay unmounts / game state changes mid-touch,
+  // make sure we never leave stale input flags set.
+  useEffect(() => {
+    if (!active) {
+      keys.current.joyX = 0;
+      keys.current.joyZ = 0;
+      keys.current.space = false;
+      releaseJoystick();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
+
+  if (!active) return null;
+
+  return (
+    <div className={styles.touchControls}>
+      <div
+        ref={baseRef}
+        className={styles.joystickBase}
+        onPointerDown={handleJoyPointerDown}
+        onPointerMove={handleJoyPointerMove}
+        onPointerUp={handleJoyPointerUp}
+        onPointerCancel={handleJoyPointerUp}
+        role="presentation"
+        aria-hidden="true"
+      >
+        <div ref={thumbRef} className={styles.joystickThumb} />
+      </div>
+      <button
+        type="button"
+        className={styles.jumpBtn}
+        onPointerDown={handleJumpDown}
+        onPointerUp={handleJumpUp}
+        onPointerCancel={handleJumpUp}
+        onPointerLeave={handleJumpUp}
+        aria-label="Jump"
+      >
+        JUMP
+      </button>
+    </div>
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Collection Particles
@@ -210,13 +330,22 @@ const GameScene = ({ gameState, cubes, onCollect, triggerParticleRef, keys }) =>
       return;
     }
 
-    // ── 1. Apply Keyboard Inputs (WASD / Arrows) ──────────────────────
-    const moveX = (keys.current.d ? 1 : 0) - (keys.current.a ? 1 : 0);
-    const moveZ = (keys.current.s ? 1 : 0) - (keys.current.w ? 1 : 0);
+    // ── 1. Apply Inputs (Keyboard WASD/Arrows + Touch Joystick) ───────
+    // Keyboard is digital (-1/0/1 per axis); the touch joystick is analog
+    // (-1..1 per axis, populated by <TouchControls>). We add them so both
+    // sources drive the same physics, then clamp to a unit vector so a
+    // full keyboard diagonal and a fully-tilted joystick behave the same,
+    // while a lightly-tilted joystick still moves slower (partial magnitude).
+    const kx = (keys.current.d ? 1 : 0) - (keys.current.a ? 1 : 0);
+    const kz = (keys.current.s ? 1 : 0) - (keys.current.w ? 1 : 0);
+    const jx = keys.current.joyX || 0;
+    const jz = keys.current.joyZ || 0;
 
-    const accel = new THREE.Vector3(moveX, 0, moveZ);
-    if (accel.lengthSq() > 0) {
-      accel.normalize().multiplyScalar(42); // Movement force
+    const accel = new THREE.Vector3(kx + jx, 0, kz + jz);
+    const accelMag = accel.length();
+    if (accelMag > 0) {
+      if (accelMag > 1) accel.divideScalar(accelMag); // clamp, keep direction
+      accel.multiplyScalar(42); // Movement force
       playerVel.x += accel.x * dt;
       playerVel.z += accel.z * dt;
     }
@@ -514,6 +643,9 @@ const MiniGame = ({ onClose }) => {
         </svg>
       </button>
 
+      {/* On-screen joystick + jump button (touch devices only, via CSS) */}
+      <TouchControls keys={keys} active={gameState === 'playing'} />
+
       {/* HUD (Heads-up display overlay) */}
       {gameState === 'playing' && (
         <div className={styles.hud}>
@@ -551,6 +683,9 @@ const MiniGame = ({ onClose }) => {
               <div className={styles.instructionItem}>
                 <span className={`${styles.key} ${styles.keyWide}`}>Space</span>
                 <span className={styles.instructionText}>to Jump</span>
+              </div>
+              <div className={`${styles.instructionItem} ${styles.touchOnlyHint}`}>
+                <span className={styles.instructionText}>On mobile: joystick to move, JUMP button to jump</span>
               </div>
             </div>
             <button className={styles.primaryBtn} onClick={handleStartGame}>

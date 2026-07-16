@@ -9,8 +9,6 @@ html {
   overflow-x: hidden;
   overflow-y: scroll;
   width: 100%;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-purple) transparent;
 }
 
 body {
@@ -19,6 +17,7 @@ body {
   font-family: var(--font-body);
   min-height: 100vh;
   width: 100%;
+  overflow-x: hidden;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -47,22 +46,46 @@ button {
   outline: none;
 }
 
-::-webkit-scrollbar {
-  width: 5px;
-}
+/* Custom purple scrollbar — laptop/desktop only. Touch devices (phones,
+   tablets) get their normal native overlay scroll indicator instead; that
+   indicator can't be recolored the same way, and layering our own custom
+   bar on top of it is what was showing up as two purple lines side by side
+   on mobile. Scoping to pointer:fine removes the custom bar from that
+   equation entirely for touch. */
+@media (hover: hover) and (pointer: fine) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-purple) transparent;
+  }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: var(--color-purple);
-  opacity: 0.6;
-  border-radius: 10px;
-}
+  ::-webkit-scrollbar-button {
+    /* Chrome/Edge on Windows render default up/down arrow-button chevrons at
+       each end of the scrollbar unless explicitly hidden. Sitting right next
+       to the custom purple thumb below, those default buttons (with their
+       own track sliver) are what read as a second purple-ish line stacked
+       beside the real one. */
+    display: none;
+    width: 0;
+    height: 0;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-purple-light);
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-purple);
+    opacity: 0.6;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-purple-light);
+  }
 }
 
 .gradient-text {

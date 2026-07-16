@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import styles from './FullscreenPDFModal.module.css';
 
@@ -38,7 +39,17 @@ const FullscreenPDFModal = ({ src, label, filename, onClose }) => {
     return () => window.removeEventListener('keydown', onKey);
   }, [handleClose]);
 
-  return (
+  // Rendered via a portal straight onto <body>. Each section that opens this
+  // modal (Resume, Academic Journey) has `position: relative; z-index: 10`
+  // on its own <section>, which creates a CSS stacking context -- so this
+  // modal's `z-index: 1000` was only ever being compared against other
+  // children of that section, never against the fixed Navbar (z-index: 100),
+  // which lives in a separate top-level stacking context. The Navbar was
+  // winning by default and covering the modal's top bar (Download/Close),
+  // even though 1000 > 100 on paper. A portal makes this a true top-level
+  // sibling of the Navbar so its z-index is finally compared where it
+  // actually matters.
+  return createPortal(
     <div className={styles.overlay} ref={overlayRef} onClick={handleClose}>
       <div
         className={styles.modal}
@@ -71,7 +82,8 @@ const FullscreenPDFModal = ({ src, label, filename, onClose }) => {
           </Suspense>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
