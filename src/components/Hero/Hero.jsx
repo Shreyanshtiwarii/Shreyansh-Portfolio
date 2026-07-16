@@ -215,20 +215,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-
-      {/* Scroll Down indicator */}
-      <button
-        className={styles.scrollIndicator}
-        onClick={scrollTo('about')}
-        aria-label="Scroll down"
-      >
-        <span className={styles.scrollText}>Scroll Down</span>
-        <span className={styles.scrollChevron} aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M3 6l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </span>
-      </button>
     </section>
   );
 };
